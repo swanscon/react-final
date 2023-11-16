@@ -60,6 +60,10 @@ function VehicleListPage() {
 				}
 				setIsLoading(false);
 				setLoadedVehicles(vehicles);
+			})
+			.catch(error => {
+				console.error("Fetching data failed:", error);
+				setIsLoading(false);
 			});
 	}, []);
 
