@@ -14,8 +14,8 @@ function DeleteVehicle({ vehicle, showDelete, handleClose, onDelete }) {
 					<Modal.Body>
 						<div className="row justify-content-center">
 							<p>
-								Are you sure you want to delete {vehicle.make}{" "}
-								{vehicle.model} with VIN: {vehicle.vin}?
+								Are you sure you want to delete {vehicle.vehicleModel?.vehicleMake?.vehicleMakeName || 'vehicle'}{" "}
+								{vehicle.vehicleModel?.vehicleModelName || ''} with VIN: {vehicle.vehicleVIN}?
 							</p>
 						</div>
 					</Modal.Body>

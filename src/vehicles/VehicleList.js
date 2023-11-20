@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import EditVehicleForm from "./EditVehicleForm";
 import DeleteVehicle from "./DeleteVehicle";
@@ -10,7 +10,7 @@ function VehicleList(props) {
 	const [showDelete, setShowDelete] = useState(false);
 	const [showView, setShowView] = useState(false);
 	const [currentVehicle, setCurrentVehicle] = useState(null);
-	const [loadedVehicles, setLoadedVehicles] = useState([]);
+	const [loadedVehicles, setLoadedVehicles] = useState(props.vehicles);
 
 	const handleClose = () => {
 		setShowEdit(false);
@@ -33,11 +33,43 @@ function VehicleList(props) {
 		setShowDelete(true);
 	}
 
+	useEffect(() => {
+		setLoadedVehicles(props.vehicles);
+	}, [props.vehicles]);
+
 	const navigate = useNavigate();
 
+	function handleUpdate(updatedVehicleData) {
+		fetch(`http://localhost:8080/vehicles/`, {
+			method: "PUT",
+			body: JSON.stringify(updatedVehicleData),
+			headers: {"Content-Type": "application/json"}
+		})
+		.then(response => {
+			if(!response.ok) {
+				return response.text().then(text => {
+					throw new Error(text || 'Server error');
+				});
+			}
+			return response.json();
+		})
+		.then(updatedVehicle => {
+			setLoadedVehicles(prevVehicles =>
+				prevVehicles.map(vehicle =>
+					vehicle.id === updatedVehicle.id ? updatedVehicle : vehicle
+			));
+			console.log(`Vehicle updated: ${updatedVehicle}`);
+			navigate("/vehicles");
+		})
+		.catch(error => {
+			console.error("Error updating vehicle: ", error);
+		});
+	}
+
 	function handleDelete(vehicleId) {
-		fetch(`https://react-final-2584b-default-rtdb.firebaseio.com/vehicles/${vehicleId}.json`, {
-			method: 'DELETE'
+		fetch(`http://localhost:8080/vehicles/${vehicleId}`, {
+			method: "DELETE",
+			headers: {"Content-Type": "application/json"}
 		})
 		.then(response => {
 			if(response.ok) {
@@ -45,6 +77,7 @@ function VehicleList(props) {
 					vehicle => vehicle.id !== vehicleId
 				));
 				console.log("Vehicle deleted: " + vehicleId);
+				navigate("/vehicles");
 			} else {
 				console.log("Couldn't delete vehicle: " + vehicleId);
 			}
@@ -58,22 +91,24 @@ function VehicleList(props) {
 		setCurrentVehicle(vehicle);
 		if (itemIsFavorite(vehicle.id)) {
 			console.log(
-				`${vehicle.make} ${vehicle.model} with VIN: ${vehicle.vin} removed from favorites`
+				`${vehicle.vehicleModel.vehicleMake.vehicleMakeName} ${vehicle.vehicleModel.vehicleModelName} `
+				+`with VIN: ${vehicle.vehicleVIN} removed from favorites.`
 			);
 			favoriteCtx.removeFavorite(vehicle.id);
 		} else {
 			console.log(
-				`${vehicle.make} ${vehicle.model} with VIN: ${vehicle.vin} added to favorites`
+				`${vehicle.vehicleModel.vehicleMake.vehicleMakeName} ${vehicle.vehicleModel.vehicleModelName} `
+				+`with VIN: ${vehicle.vehicleVIN} added to favorites.`
 			);
 			favoriteCtx.addFavorite({
 				id: vehicle.id,
-				image: vehicle.image,
-				make: vehicle.make,
-				model: vehicle.model,
-				vin: vehicle.vin,
-				licensePlate: vehicle.licensePlate,
-				year: vehicle.year,
-				color: vehicle.color,
+				image: vehicle.vehicleModel.vehicleModelImage,
+				make: vehicle.vehicleModel.vehicleMake.vehicleMakeName,
+				model: vehicle.vehicleModel.vehicleModelName,
+				vin: vehicle.vehicleVIN,
+				licensePlate: vehicle.vehicleLicense,
+				year: vehicle.vehicleYear,
+				color: vehicle.vehicleColor,
 			});
 		}
 	}
@@ -81,7 +116,7 @@ function VehicleList(props) {
 	return (
 		<>
 			<tbody>
-				{props.vehicles.map((vehicle) => {
+				{loadedVehicles.map((vehicle) => {
 					return (
 						<tr key={vehicle.id}>
 							<td>
@@ -89,18 +124,18 @@ function VehicleList(props) {
 									{itemIsFavorite(vehicle.id) ? "!" : "?"}
 								</button>
 							</td>
-							<td>{vehicle.make}</td>
-							<td>{vehicle.model}</td>
+							<td>{vehicle.vehicleModel?.vehicleMake?.vehicleMakeName || 'N/A'}</td>
+							<td>{vehicle.vehicleModel?.vehicleModelName || 'N/A'}</td>
 							<td>
 								<button
 									className="select"
 									onClick={() => viewVehicleHandler(vehicle)}>
-									{vehicle.vin}
+									{vehicle.vehicleVIN}
 								</button>
 							</td>
-							<td>{vehicle.licensePlate}</td>
-							<td>{vehicle.year}</td>
-							<td>{vehicle.color}</td>
+							<td>{vehicle.vehicleLicense}</td>
+							<td>{vehicle.vehicleYear}</td>
+							<td>{vehicle.vehicleColor}</td>
 							<td>
 								<button onClick={() => editVehicleHandler(vehicle)}>E</button>
 							</td>
@@ -116,6 +151,7 @@ function VehicleList(props) {
 				vehicle={currentVehicle}
 				showEdit={showEdit}
 				handleClose={handleClose}
+				onUpdateVehicle={handleUpdate}
 			/>
 			<DeleteVehicle
 				vehicle={currentVehicle}

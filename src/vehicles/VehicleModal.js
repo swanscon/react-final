@@ -9,25 +9,25 @@ function VehicleModal({ vehicle, showView, handleClose }) {
 				<Modal show={showView} onHide={handleClose} className="backdrop">
 					<Modal.Header>
 						<Modal.Title>
-							{vehicle.make} {vehicle.model}
+							{vehicle.vehicleModel?.vehicleMake?.vehicleMakeName || 'N/A'} {vehicle.vehicleModel?.vehicleModelName || 'N/A'}
 						</Modal.Title>
 					</Modal.Header>
 					<Modal.Body>
 						<div className="row justify-content-center">
 							<div>
-								<img src={vehicle.image} alt={vehicle.model} />
+								<img src={vehicle.vehicleModel?.vehicleModelImage || ''} alt={vehicle.vehicleModel?.vehicleModelName || 'No image'} />
 							</div>
 							<div>
-								<p>VIN: {vehicle.vin}</p>
+								<p>VIN: {vehicle.vehicleVIN}</p>
 							</div>
 							<div>
-								<p>License Plate: {vehicle.licensePlate}</p>
+								<p>License Plate: {vehicle.vehicleLicense}</p>
 							</div>
 							<div>
-								<p>Year: {vehicle.year}</p>
+								<p>Year: {vehicle.vehicleYear}</p>
 							</div>
 							<div>
-								<p>Color: {vehicle.color}</p>
+								<p>Color: {vehicle.vehicleColor}</p>
 							</div>
 						</div>
 					</Modal.Body>

@@ -19,15 +19,27 @@ function VehicleNavigation() {
 	const navigate = useNavigate();
 
 	function addVehicleHandler(vehicleData) {
-		fetch("https://react-final-2584b-default-rtdb.firebaseio.com/vehicles.json",
+		fetch("http://localhost:8080/vehicles/",
 		{
 			method: "POST",
 			body: JSON.stringify(vehicleData),
 			headers: {"Content-Type": "application/json"}
 		})
-		.then(response => response.json())
-		.then(data =>{console.log(`New vehicle added: ${data}`);
+		.then(response => {
+			if(!response.ok) {
+				return response.text().then(text => {
+					throw new Error(text || 'Server error');
+				});
+			}
+			return response.json();
 		})
+		.then(data => {
+			console.log(`New vehicle added: ${data}`);
+			navigate('/vehicles');
+		})
+		.catch(error => {
+			console.error("Error adding vehicle:", error);
+		});
 	}
 
 	return (
