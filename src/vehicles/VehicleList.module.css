@@ -1,0 +1,9 @@
+.clearbutton {
+    border-style: none;
+    background: none;
+}
+
+.vindisplay {
+    font-weight: bold;
+    color: rgb(35, 35, 51);
+}

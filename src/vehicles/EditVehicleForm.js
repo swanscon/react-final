@@ -1,5 +1,5 @@
 import classes from "./VehicleForm.module.css";
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button, Stack } from "react-bootstrap";
 import { useRef, useState, useEffect } from "react";
 
 function EditVehicleForm({ vehicle, showEdit, handleClose, onUpdateVehicle }) {
@@ -60,8 +60,12 @@ function EditVehicleForm({ vehicle, showEdit, handleClose, onUpdateVehicle }) {
 		return (
 			<>
 				<Modal show={showEdit} onHide={handleClose} className="backdrop">
-				<Modal.Header>
+				<Modal.Header className="centered">
 					<Modal.Title>Edit Vehicle</Modal.Title>
+				</Modal.Header>
+				<Modal.Header className="centered">
+					<h5>{vehicle.vehicleModel.vehicleMake.vehicleMakeName} {vehicle.vehicleModel.vehicleModelName}</h5>
+					<p><b>VIN:</b> {vehicle.vehicleVIN}</p>
 				</Modal.Header>
 				<Modal.Body>
 					<div className="row justify-content-center">
@@ -97,11 +101,11 @@ function EditVehicleForm({ vehicle, showEdit, handleClose, onUpdateVehicle }) {
 								</select>
 							</div>
 							<div className={classes.control}>
-								<label htmlFor="vin">vin</label>
+								<label htmlFor="vin">VIN #</label>
 								<input type="text" required id="vin" ref={vinInputRef} defaultValue={vehicle.vehicleVIN}/>
 							</div>
 							<div className={classes.control}>
-								<label htmlFor="licensePlate">license</label>
+								<label htmlFor="licensePlate">License Plate</label>
 								<input
 									type="text"
 									required
@@ -110,23 +114,21 @@ function EditVehicleForm({ vehicle, showEdit, handleClose, onUpdateVehicle }) {
 									defaultValue={vehicle.vehicleLicense}/>
 							</div>
 							<div className={classes.control}>
-								<label htmlFor="year">year</label>
+								<label htmlFor="year">Year</label>
 								<input type="text" required id="year" ref={yearInputRef} defaultValue={vehicle.vehicleYear}/>
 							</div>
 							<div className={classes.control}>
-								<label htmlFor="color">color</label>
+								<label htmlFor="color">Color</label>
 								<input type="text" required id="color" ref={colorInputRef} defaultValue={vehicle.vehicleColor}/>
 							</div>
-							<div className={classes.actions}>
+							<Stack gap={2} className="col-md-5 mx-auto">
 								<Button variant="secondary" onClick={handleClose}>
 									Close
 								</Button>
-							</div>
-							<div className={classes.actions}>
 								<Button variant="primary" type="submit" onSubmit={handleClose} onClick={handleClose}>
-									Add Vehicle
+									Confirm Changes
 								</Button>
-							</div>
+							</Stack>
 						</form>
 					</div>
 				</Modal.Body>

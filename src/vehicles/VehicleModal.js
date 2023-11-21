@@ -15,7 +15,7 @@ function VehicleModal({ vehicle, showView, handleClose }) {
 					<Modal.Body>
 						<div className="row justify-content-center">
 							<div>
-								<img src={vehicle.vehicleModel?.vehicleModelImage || ''} alt={vehicle.vehicleModel?.vehicleModelName || 'No image'} />
+								<img src={vehicle.vehicleModel?.vehicleModelImage || ''} alt={vehicle.vehicleModel?.vehicleModelName || 'No image'} className="img-fluid"/>
 							</div>
 							<div>
 								<p>VIN: {vehicle.vehicleVIN}</p>

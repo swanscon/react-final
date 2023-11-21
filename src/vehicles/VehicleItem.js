@@ -1,6 +1,7 @@
 import { useContext } from "react";
-import Card from "../ui/Card";
+import { Card, ListGroup, Stack, Button, ListGroupItem } from "react-bootstrap";
 import FavoritesContext from "../store/favorites-context";
+import classes from './VehicleItem.module.css';
 
 function VehicleItem(props) {
 	const favoriteCtx = useContext(FavoritesContext);
@@ -25,32 +26,27 @@ function VehicleItem(props) {
 	}
 
 	return (
-		<Card>
-			<div>
-				<li>
-					<div>
-						<img src={props.image} alt={props.model}></img>
-					</div>
-					<div>
-						<h3>{props.make}</h3>
-						<h3>{props.model}</h3>
-						<ul>
-							<li>VIN: {props.vin}</li>
-							<li>License Plate: {props.licensePlate}</li>
-							<li>Year: {props.year}</li>
-							<li>Color: {props.color}</li>
-						</ul>
-					</div>
-					<div>
-						<button onClick={toggleFavoriteStatusHandler}>
-							{itemIsFavorite ? "Remove from Favorites" : "To Favorites"}
-						</button>
-						<button>Edit</button>
-						<button>Delete</button>
-					</div>
-				</li>
-			</div>
-		</Card>
+		<Card className="bg-dark text-white">
+		<Card.Img variant="top" src={props.image} alt={props.model} />
+		<Card.Body>
+			<Card.Title className="centered">
+				{props.make} {props.model}
+			</Card.Title>
+			<Card.Text>
+				<ListGroup variant="flush">
+					<ListGroup.Item className={classes.bgDark}>VIN: {props.vin}</ListGroup.Item>
+					<ListGroup.Item className={classes.bgDark}>License Plate: {props.licensePlate}</ListGroup.Item>
+					<ListGroup.Item className={classes.bgDark}>Year: {props.year}</ListGroup.Item>
+					<ListGroup.Item className={classes.bgDark}>Color: {props.color}</ListGroup.Item>
+				</ListGroup>
+			</Card.Text>
+			<Stack gap={2}>
+				<Button className="btn btn-danger" onClick={toggleFavoriteStatusHandler}>
+					{itemIsFavorite ? "Remove from Favorites" : "To Favorites"}
+				</Button>
+			</Stack>
+		</Card.Body>
+	</Card>
 	);
 }
 

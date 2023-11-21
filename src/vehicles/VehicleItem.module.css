@@ -1,0 +1,13 @@
+.card {
+	background-color: rgb(88, 88, 88);
+	color: white;
+	border-radius: 6px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    width: 25rem;
+    margin: 1rem;
+}
+
+.bgDark {
+	background-color: #474e5a;
+	color: white;
+}

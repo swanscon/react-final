@@ -4,6 +4,17 @@ import EditVehicleForm from "./EditVehicleForm";
 import DeleteVehicle from "./DeleteVehicle";
 import FavoritesContext from "../store/favorites-context";
 import VehicleModal from "./VehicleModal";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+	faPenToSquare,
+	faStarHalf,
+	faStarHalfAlt,
+	faStarHalfStroke,
+	faTrashCan,
+} from "@fortawesome/free-regular-svg-icons";
+import { Button } from "react-bootstrap";
+import classes from "./VehicleList.module.css";
+import { faStar, faStarAndCrescent } from "@fortawesome/free-solid-svg-icons";
 
 function VehicleList(props) {
 	const [showEdit, setShowEdit] = useState(false);
@@ -43,45 +54,45 @@ function VehicleList(props) {
 		fetch(`http://localhost:8080/vehicles/`, {
 			method: "PUT",
 			body: JSON.stringify(updatedVehicleData),
-			headers: {"Content-Type": "application/json"}
+			headers: { "Content-Type": "application/json" },
 		})
-		.then(response => {
-			if(!response.ok) {
-				return response.text().then(text => {
-					throw new Error(text || 'Server error');
-				});
-			}
-			return response.json();
-		})
-		.then(updatedVehicle => {
-			setLoadedVehicles(prevVehicles =>
-				prevVehicles.map(vehicle =>
-					vehicle.id === updatedVehicle.id ? updatedVehicle : vehicle
-			));
-			console.log(`Vehicle updated: ${updatedVehicle}`);
-			navigate("/vehicles");
-		})
-		.catch(error => {
-			console.error("Error updating vehicle: ", error);
-		});
+			.then((response) => {
+				if (!response.ok) {
+					return response.text().then((text) => {
+						throw new Error(text || "Server error");
+					});
+				}
+				return response.json();
+			})
+			.then((updatedVehicle) => {
+				setLoadedVehicles((prevVehicles) =>
+					prevVehicles.map((vehicle) =>
+						vehicle.id === updatedVehicle.id ? updatedVehicle : vehicle
+					)
+				);
+				console.log(`Vehicle updated: ${updatedVehicle}`);
+				navigate("/vehicles");
+			})
+			.catch((error) => {
+				console.error("Error updating vehicle: ", error);
+			});
 	}
 
 	function handleDelete(vehicleId) {
 		fetch(`http://localhost:8080/vehicles/${vehicleId}`, {
 			method: "DELETE",
-			headers: {"Content-Type": "application/json"}
-		})
-		.then(response => {
-			if(response.ok) {
-				setLoadedVehicles(prevVehicles=>prevVehicles.filter(
-					vehicle => vehicle.id !== vehicleId
-				));
+			headers: { "Content-Type": "application/json" },
+		}).then((response) => {
+			if (response.ok) {
+				setLoadedVehicles((prevVehicles) =>
+					prevVehicles.filter((vehicle) => vehicle.id !== vehicleId)
+				);
 				console.log("Vehicle deleted: " + vehicleId);
 				navigate("/vehicles");
 			} else {
 				console.log("Couldn't delete vehicle: " + vehicleId);
 			}
-		})
+		});
 	}
 
 	const favoriteCtx = useContext(FavoritesContext);
@@ -91,14 +102,14 @@ function VehicleList(props) {
 		setCurrentVehicle(vehicle);
 		if (itemIsFavorite(vehicle.id)) {
 			console.log(
-				`${vehicle.vehicleModel.vehicleMake.vehicleMakeName} ${vehicle.vehicleModel.vehicleModelName} `
-				+`with VIN: ${vehicle.vehicleVIN} removed from favorites.`
+				`${vehicle.vehicleModel.vehicleMake.vehicleMakeName} ${vehicle.vehicleModel.vehicleModelName} ` +
+					`with VIN: ${vehicle.vehicleVIN} removed from favorites.`
 			);
 			favoriteCtx.removeFavorite(vehicle.id);
 		} else {
 			console.log(
-				`${vehicle.vehicleModel.vehicleMake.vehicleMakeName} ${vehicle.vehicleModel.vehicleModelName} `
-				+`with VIN: ${vehicle.vehicleVIN} added to favorites.`
+				`${vehicle.vehicleModel.vehicleMake.vehicleMakeName} ${vehicle.vehicleModel.vehicleModelName} ` +
+					`with VIN: ${vehicle.vehicleVIN} added to favorites.`
 			);
 			favoriteCtx.addFavorite({
 				id: vehicle.id,
@@ -120,27 +131,42 @@ function VehicleList(props) {
 					return (
 						<tr key={vehicle.id}>
 							<td>
-								<button onClick={() => toggleFavoriteStatusHandler(vehicle)}>
-									{itemIsFavorite(vehicle.id) ? "!" : "?"}
-								</button>
+								<Button
+									onClick={() => toggleFavoriteStatusHandler(vehicle)}
+									className="btn btn-warning"
+								>
+									{itemIsFavorite(vehicle.id) ? (
+										<FontAwesomeIcon icon={faStar} />
+									) : (
+										<FontAwesomeIcon icon={faStarHalfStroke} />
+									)}
+								</Button>
 							</td>
-							<td>{vehicle.vehicleModel?.vehicleMake?.vehicleMakeName || 'N/A'}</td>
-							<td>{vehicle.vehicleModel?.vehicleModelName || 'N/A'}</td>
-							<td>
-								<button
-									className="select"
-									onClick={() => viewVehicleHandler(vehicle)}>
-									{vehicle.vehicleVIN}
-								</button>
-							</td>
+							<td>{vehicle.vehicleModel?.vehicleMake?.vehicleMakeName || "N/A"}</td>
+							<td>{vehicle.vehicleModel?.vehicleModelName || "N/A"}</td>
+
+							<th className="select" onClick={() => viewVehicleHandler(vehicle)}>
+								{vehicle.vehicleVIN}
+							</th>
+
 							<td>{vehicle.vehicleLicense}</td>
 							<td>{vehicle.vehicleYear}</td>
 							<td>{vehicle.vehicleColor}</td>
 							<td>
-								<button onClick={() => editVehicleHandler(vehicle)}>E</button>
+								<Button
+									onClick={() => editVehicleHandler(vehicle)}
+									className="btn btn-success"
+								>
+									<FontAwesomeIcon icon={faPenToSquare} />
+								</Button>
 							</td>
 							<td>
-								<button onClick={() => deleteModalHandler(vehicle)}>D</button>
+								<Button
+									onClick={() => deleteModalHandler(vehicle)}
+									className="btn btn-danger"
+								>
+									<FontAwesomeIcon icon={faTrashCan} />
+								</Button>
 							</td>
 						</tr>
 					);

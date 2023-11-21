@@ -1,27 +1,24 @@
 import { Link } from "react-router-dom";
+import { Nav, Navbar } from "react-bootstrap";
 
 function MainNavigation() {
 	return (
 		<header>
-			<nav className="navbar navbar-expand-lg bg-body-secondary">
+			<Navbar className="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
 				<div className="container-fluid">
 					<Link to="/" className="navbar-brand">
 						Car Catalog
 					</Link>
-					<ul className="navbar-nav me-auto mb-2 mb-lg-0">
-						<li className="nav-item">
-							<Link to="/" className="nav-link">
-								Home
-							</Link>
-						</li>
-						<li className="nav-item">
-							<Link to="/vehicles" className="nav-link">
-								Vehicles
-							</Link>
-						</li>
-					</ul>
+					<Nav className="me-auto">
+						<Link to="/" className="nav-link">
+							Home
+						</Link>
+						<Link to="/vehicles" className="nav-link">
+							Vehicles
+						</Link>
+					</Nav>
 				</div>
-			</nav>
+			</Navbar>
 		</header>
 	);
 }

@@ -1,5 +1,5 @@
 import classes from "./VehicleForm.module.css";
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button, Stack } from "react-bootstrap";
 import { useRef, useState, useEffect } from "react";
 
 function NewVehicleForm({ showModal, handleClose, onAddVehicle }) {
@@ -50,7 +50,7 @@ function NewVehicleForm({ showModal, handleClose, onAddVehicle }) {
 	return (
 		<>
 			<Modal show={showModal} onHide={handleClose} className="backdrop">
-				<Modal.Header>
+				<Modal.Header className="centered title">
 					<Modal.Title>Add New Vehicle</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
@@ -90,11 +90,11 @@ function NewVehicleForm({ showModal, handleClose, onAddVehicle }) {
 								</select>
 							</div>
 							<div className={classes.control}>
-								<label htmlFor="vin">vin</label>
+								<label htmlFor="vin">VIN #</label>
 								<input type="text" required id="vin" ref={vinInputRef} />
 							</div>
 							<div className={classes.control}>
-								<label htmlFor="licensePlate">license</label>
+								<label htmlFor="licensePlate">License Plate</label>
 								<input
 									type="text"
 									required
@@ -103,23 +103,21 @@ function NewVehicleForm({ showModal, handleClose, onAddVehicle }) {
 								/>
 							</div>
 							<div className={classes.control}>
-								<label htmlFor="year">year</label>
+								<label htmlFor="year">Year</label>
 								<input type="text" required id="year" ref={yearInputRef} />
 							</div>
 							<div className={classes.control}>
-								<label htmlFor="color">color</label>
+								<label htmlFor="color">Color</label>
 								<input type="text" required id="color" ref={colorInputRef} />
 							</div>
-							<div className={classes.actions}>
+							<Stack gap={2} className="col-md-5 mx-auto">
 								<Button variant="secondary" onClick={handleClose}>
 									Close
 								</Button>
-							</div>
-							<div className={classes.actions}>
 								<Button variant="primary" type="submit" onSubmit={handleClose} onClick={handleClose}>
 									Add Vehicle
 								</Button>
-							</div>
+							</Stack>
 						</form>
 					</div>
 				</Modal.Body>
